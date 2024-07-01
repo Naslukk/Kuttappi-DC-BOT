@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { Client, GatewayIntentBits } = require('discord.js');
 const client = new Client({
     intents: [
@@ -5,7 +7,7 @@ const client = new Client({
         GatewayIntentBits.GuildMembers
     ]
 });
-const token = 'MTI1NjgxMjgzMzM1NDY4MjQ0OA.G7az5s.pO_JD3ZN9LB05Jx_KBpNFmCx9-mMEE7CdbOsb4';
+const token = process.env.BOT_TOKEN ;
 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
