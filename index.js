@@ -53,6 +53,7 @@ async function updateStudentCountChannel(){
 
         // Update the channel name with the count of members with the role
         await channel.setName(`⭐︱Student - ${membersCount}`);
+        console.log(`channel name updated ⭐︱Student - ${membersCount}`);
 
     } catch (error) {
         console.error('Error fetching role or members:', error);
