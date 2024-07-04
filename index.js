@@ -8,7 +8,9 @@ const port = 3000;
 
 
 const guildId = '1165642036054065233';
-const channelId = '1257567796792135740';
+const scheduleChannelId = '1257567796792135740';
+const roleId = '1257257817006673940';
+const studentsCountChannelId = '1258314381289193582';
 
 const client = new Client({
     intents: [
@@ -30,8 +32,35 @@ client.once('ready', async () => {
     ];
 
     await client.guilds.cache.get(guildId)?.commands.set(commands);
+    updateStudentCountChannel()
     console.log('Slash commands registered!');
 
+});
+
+// !! function for counting students in server
+
+async function updateStudentCountChannel(){
+    try {
+        const guild = await client.guilds.fetch(guildId);
+
+        // Fetch all members to ensure they are cached
+        await guild.members.fetch();
+
+        const role = await guild.roles.fetch(roleId);
+        const membersWithRole = role.members;
+        const membersCount = membersWithRole.size
+        const channel = await guild.channels.fetch(studentsCountChannelId);
+
+        // Update the channel name with the count of members with the role
+        await channel.setName(`⭐︱Student - ${membersCount}`);
+
+    } catch (error) {
+        console.error('Error fetching role or members:', error);
+    }
+}
+
+client.on('guildMemberRemove', () => {
+    updateStudentCountChannel();
 });
 
 // ?? Student Role adding
@@ -42,6 +71,7 @@ client.on('guildMemberAdd', member => {
         member.roles.add(role)
             .then(() => console.log(`Assigned the role ${role.name} to ${member.user.tag}.`))
             .catch(err => console.error(err));
+            updateStudentCountChannel()
     } else {
         console.log('Role not found');
     }
@@ -89,7 +119,7 @@ client.on('interactionCreate', async interaction => {
 
         const userName = interaction.user.username;
 
-        const channel = client.channels.cache.get(channelId);
+        const channel = client.channels.cache.get(scheduleChannelId);
         if (channel) {
             channel.send(`New Session Slot Requested by\n**User:** ${userName}\n**Date**: ${date}\n**Time**: ${time}${sessionAmPm}\n**Slot ID**: ${slotId}`);
         }
