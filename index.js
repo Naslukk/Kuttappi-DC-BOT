@@ -69,9 +69,9 @@ client.on('guildMemberAdd', member => {
     const role = member.guild.roles.cache.find(role => role.name === "⭐︱Student");
     if (role) {
         member.roles.add(role)
-            .then(() => console.log(`Assigned the role ${role.name} to ${member.user.tag}.`))
+            .then(() => updateStudentCountChannel())
             .catch(err => console.error(err));
-            updateStudentCountChannel()
+    
     } else {
         console.log('Role not found');
     }
