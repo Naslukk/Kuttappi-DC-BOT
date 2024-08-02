@@ -145,6 +145,7 @@ client.login(token);
 
 app.get('/', (req, res) => {
     res.send('Hello, Express!');
+    updateStudentCountChannel();
 });
 
 app.listen(port, () => {
